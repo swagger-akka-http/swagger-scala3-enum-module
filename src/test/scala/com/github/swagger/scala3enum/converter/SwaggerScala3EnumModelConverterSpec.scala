@@ -11,7 +11,7 @@ import scala.reflect.Enum
 
 class SwaggerScala3EnumModelConverterSpec extends AnyWordSpec with Matchers with OptionValues {
   "SwaggerScala3EnumModelConverter" should {
-    "deserialize Car" in {
+    "get model for Car" in {
       /*
       val carClass = classOf[Car]
       val enumClass = carClass.getMethods.toList.filter(_.getName == "color").map(_.getReturnType).head
@@ -22,6 +22,17 @@ class SwaggerScala3EnumModelConverterSpec extends AnyWordSpec with Matchers with
       val converter = ModelConverters.getInstance()
       val schemas = converter.readAll(classOf[Car]).asScala.toMap
       val model = findModel(schemas, "Car")
+      model should be (defined)
+      model.get.getProperties should not be (null)
+      val field = model.value.getProperties.get("color")
+      field shouldBe a [StringSchema]
+      field.asInstanceOf[StringSchema].getEnum.asScala shouldEqual Seq("Red", "Green", "Blue")
+      nullSafeList(model.value.getRequired) shouldBe Seq("color", "make")
+    }
+    "get model for CtxCar" in {
+      val converter = ModelConverters.getInstance()
+      val schemas = converter.readAll(classOf[CtxCar]).asScala.toMap
+      val model = findModel(schemas, "CtxCar")
       model should be (defined)
       model.get.getProperties should not be (null)
       val field = model.value.getProperties.get("color")
