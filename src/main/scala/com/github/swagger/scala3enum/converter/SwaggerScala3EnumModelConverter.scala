@@ -1,4 +1,4 @@
-package com.github.swagger.scala3.`enum`.converter
+package com.github.swagger.scala3enum.converter
 
 import com.github.swagger.scala.converter.AnnotatedTypeForOption
 import io.swagger.v3.core.converter.{AnnotatedType, ModelConverter, ModelConverterContext}
@@ -69,7 +69,7 @@ class SwaggerScala3EnumModelConverter extends ModelResolver(Json.mapper()) {
     val enumArray = enumCompanion.getClass.getDeclaredMethod("values").invoke(enumCompanion).asInstanceOf[Array[Enum]]
     enumArray.sortBy(_.ordinal).map(_.toString).toSeq
   }
-  
+
   private def setRequired(annotatedType: AnnotatedType): Unit = annotatedType match {
     case _: AnnotatedTypeForOption => // not required
     case _ => {
