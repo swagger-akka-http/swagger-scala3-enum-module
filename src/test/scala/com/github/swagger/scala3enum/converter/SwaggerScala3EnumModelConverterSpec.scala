@@ -1,7 +1,7 @@
 package com.github.swagger.scala3enum.converter
 
 import io.swagger.v3.core.converter.ModelConverters
-import io.swagger.v3.oas.models.media.{Schema, StringSchema}
+import io.swagger.v3.oas.models.media.{ArraySchema, Schema, StringSchema}
 import org.scalatest.OptionValues
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
@@ -39,6 +39,18 @@ class SwaggerScala3EnumModelConverterSpec extends AnyWordSpec with Matchers with
       field shouldBe a [StringSchema]
       field.asInstanceOf[StringSchema].getEnum.asScala shouldEqual Seq("Red", "Green", "Blue")
       nullSafeList(model.value.getRequired) shouldBe Seq("color", "make")
+    }
+    "get model for Colors" in {
+      val converter = ModelConverters.getInstance()
+      val schemas = converter.readAll(classOf[Colors]).asScala.toMap
+      val model = findModel(schemas, "Colors")
+      model should be (defined)
+      model.get.getProperties should not be (null)
+      val field = model.value.getProperties.get("set")
+      field shouldBe a [ArraySchema]
+      val arraySchema = field.asInstanceOf[ArraySchema]
+      arraySchema.getItems.getEnum.asScala shouldEqual Seq("Red", "Green", "Blue")
+      nullSafeList(model.value.getRequired) shouldBe Seq("set")
     }
   }
 
