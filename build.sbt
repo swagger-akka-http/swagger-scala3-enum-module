@@ -30,7 +30,7 @@ Test / parallelExecution := false
 
 startYear := Some(2021)
 
-licenses := Seq(("Apache License 2.0", new URL("http://www.apache.org/licenses/LICENSE-2.0.html")))
+licenses := Seq(("Apache License 2.0", new URL("https://www.apache.org/licenses/LICENSE-2.0.html")))
 
 releasePublishArtifactsAction := PgpKeys.publishSigned.value
 
