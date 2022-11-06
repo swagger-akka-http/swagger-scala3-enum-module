@@ -26,8 +26,9 @@ class SwaggerScala3EnumModelConverterSpec extends AnyWordSpec with Matchers with
       model.get.getProperties should not be (null)
       val field = model.value.getProperties.get("color")
       field shouldBe a [StringSchema]
-      field.asInstanceOf[StringSchema].getEnum.asScala shouldEqual Seq("Red", "Green", "Blue")
-      nullSafeList(model.value.getRequired) shouldBe Seq("color", "make")
+      nullSafeList(field.asInstanceOf[StringSchema].getEnum) shouldEqual Seq("Red", "Green", "Blue")
+      nullSafeList(field.getRequired) shouldBe empty
+      nullSafeList(model.value.getRequired) shouldEqual Seq("color", "make")
     }
     "get model for CtxCar" in {
       val converter = ModelConverters.getInstance()
@@ -37,8 +38,9 @@ class SwaggerScala3EnumModelConverterSpec extends AnyWordSpec with Matchers with
       model.get.getProperties should not be (null)
       val field = model.value.getProperties.get("color")
       field shouldBe a [StringSchema]
-      field.asInstanceOf[StringSchema].getEnum.asScala shouldEqual Seq("Red", "Green", "Blue")
-      nullSafeList(model.value.getRequired) shouldBe Seq("color", "make")
+      nullSafeList(field.asInstanceOf[StringSchema].getEnum) shouldEqual Seq("Red", "Green", "Blue")
+      nullSafeList(field.getRequired) shouldBe empty
+      nullSafeList(model.value.getRequired) shouldEqual Seq("color", "make")
     }
     "get model for Colors" in {
       val converter = ModelConverters.getInstance()
@@ -49,8 +51,9 @@ class SwaggerScala3EnumModelConverterSpec extends AnyWordSpec with Matchers with
       val field = model.value.getProperties.get("set")
       field shouldBe a [ArraySchema]
       val arraySchema = field.asInstanceOf[ArraySchema]
-      arraySchema.getItems.getEnum.asScala shouldEqual Seq("Red", "Green", "Blue")
-      nullSafeList(model.value.getRequired) shouldBe Seq("set")
+      nullSafeList(arraySchema.getItems.getEnum) shouldEqual Seq("Red", "Green", "Blue")
+      nullSafeList(arraySchema.getRequired) shouldBe empty
+      nullSafeList(model.value.getRequired) shouldEqual Seq("set")
     }
   }
 
