@@ -17,7 +17,7 @@ Test / publishArtifact := false
 pomIncludeRepository := { x => false }
 
 libraryDependencies ++= Seq(
-  "io.swagger.core.v3" % "swagger-core-jakarta" % "2.2.6",
+  "io.swagger.core.v3" % "swagger-core-jakarta" % "2.2.4",
   "com.github.swagger-akka-http" %% "swagger-scala-module" % "2.7.9",
   "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.14.0",
   "org.scalatest" %% "scalatest" % "3.2.14" % Test,
