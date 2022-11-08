@@ -21,7 +21,7 @@ libraryDependencies ++= Seq(
   "com.github.swagger-akka-http" %% "swagger-scala-module" % "2.8.0",
   "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.14.0",
   "org.scalatest" %% "scalatest" % "3.2.14" % Test,
-  "org.slf4j" % "slf4j-simple" % "1.7.36" % Test
+  "org.slf4j" % "slf4j-simple" % "2.0.3" % Test
 )
 
 homepage := Some(new URL("https://github.com/swagger-akka-http/swagger-scala3-enum-module"))
