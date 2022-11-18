@@ -2,7 +2,7 @@
 import xml.Group
 import sbt._
 import Keys._
-import sbtghactions.JavaSpec.Distribution.Zulu
+import org.typelevel.sbt.gha.JavaSpec.Distribution.Zulu
 
 organization := "com.github.swagger-akka-http"
 
@@ -17,11 +17,11 @@ Test / publishArtifact := false
 pomIncludeRepository := { x => false }
 
 libraryDependencies ++= Seq(
-  "io.swagger.core.v3" % "swagger-core-jakarta" % "2.2.4",
-  "com.github.swagger-akka-http" %% "swagger-scala-module" % "2.8.0",
+  "io.swagger.core.v3" % "swagger-core-jakarta" % "2.2.7",
+  "com.github.swagger-akka-http" %% "swagger-scala-module" % "2.8.2",
   "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.14.0",
   "org.scalatest" %% "scalatest" % "3.2.14" % Test,
-  "org.slf4j" % "slf4j-simple" % "2.0.3" % Test
+  "org.slf4j" % "slf4j-simple" % "2.0.4" % Test
 )
 
 homepage := Some(new URL("https://github.com/swagger-akka-http/swagger-scala3-enum-module"))
@@ -51,7 +51,6 @@ pomExtra := {
 }
 
 ThisBuild / githubWorkflowJavaVersions := Seq(JavaSpec(Zulu, "8"))
-ThisBuild / githubWorkflowTargetTags ++= Seq("v*")
 ThisBuild / githubWorkflowPublishTargetBranches := Seq(
   RefPredicate.Equals(Ref.Branch("main")),
   RefPredicate.StartsWith(Ref.Tag("v"))
