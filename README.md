@@ -9,5 +9,5 @@ Scala3 enum support for swagger 2.x libs (OpenAPI 3 spec).
 Adding this library to your classpath should be enough to have swagger libs support Scala3 enums. Ignore v2.13.0, a release number used in error.
 
 ```scala
-libraryDependencies += "com.github.pjfanning" %% "swagger-scala3-enum-module" % "2.1.0"
+libraryDependencies += "com.github.pjfanning" %% "swagger-scala3-enum-module" % "2.2.0"
 ```
