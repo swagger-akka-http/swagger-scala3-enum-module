@@ -8,4 +8,4 @@ enum Color(val rgb: Int):
 
 case class ColorSet(set: Set[Color])
 
-case class Car(make: String, color: Color)  
+case class Car(make: String, color: Color)
