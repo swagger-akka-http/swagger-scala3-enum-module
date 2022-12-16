@@ -31,7 +31,10 @@ class SwaggerAdtConverterSpec extends AnyWordSpec with Matchers with OptionValue
       model.get.getProperties should not be (null)
       val field = model.value.getProperties.get("set")
       field shouldBe an [ArraySchema]
-      nullSafeList(field.asInstanceOf[ArraySchema].getEnum) shouldEqual Seq("Red", "Green", "Blue")
+      val arraySchema = field.asInstanceOf[ArraySchema]
+      nullSafeList(arraySchema.getItems.getEnum) shouldEqual Seq("Red", "Green", "Blue")
+      nullSafeList(arraySchema.getRequired) shouldBe empty
+      nullSafeList(model.value.getRequired) shouldEqual Seq("set")
     }
   }
 
