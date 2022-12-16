@@ -5,11 +5,10 @@ import io.swagger.v3.core.converter.{AnnotatedType, ModelConverter, ModelConvert
 import io.swagger.v3.core.jackson.ModelResolver
 import io.swagger.v3.core.util.{Json, PrimitiveType}
 import io.swagger.v3.oas.annotations.Parameter
-import io.swagger.v3.oas.annotations.media.Schema.{AccessMode, RequiredMode}
-import io.swagger.v3.oas.annotations.media.{ArraySchema, Schema as SchemaAnnotation}
+import io.swagger.v3.oas.annotations.media.Schema.AccessMode
+import io.swagger.v3.oas.annotations.media.{Schema as SchemaAnnotation}
 import io.swagger.v3.oas.models.media.Schema
 
-import java.lang.annotation.Annotation
 import java.lang.reflect.InvocationTargetException
 import java.util.Iterator
 import scala.reflect.Enum
@@ -113,7 +112,7 @@ class SwaggerScala3EnumModelConverter extends ModelResolver(Json.mapper()) {
   private def setRequired(annotatedType: AnnotatedType): Unit = annotatedType match {
     case _: AnnotatedTypeForOption => // not required
     case _ => {
-      val required = getRequiredSettings(annotatedType).headOption.getOrElse(true)
+      val required = SwaggerScalaModelConverter.getRequiredSettings(annotatedType).headOption.getOrElse(true)
       if (required) {
         Option(annotatedType.getParent).foreach { parent =>
           Option(annotatedType.getPropertyName).foreach { n =>
@@ -121,48 +120,6 @@ class SwaggerScala3EnumModelConverter extends ModelResolver(Json.mapper()) {
           }
         }
       }
-    }
-  }
-
-  private def getRequiredSettings(annotatedType: AnnotatedType): Seq[Boolean] = annotatedType match {
-    case _: AnnotatedTypeForOption => Seq.empty
-    case _ => getRequiredSettings(nullSafeList(annotatedType.getCtxAnnotations))
-  }
-
-  private def getRequiredSettings(annotations: Seq[Annotation]): Seq[Boolean] = {
-    val flags = annotations.collect {
-      case p: Parameter => if (p.required()) RequiredMode.REQUIRED else RequiredMode.NOT_REQUIRED
-      case s: SchemaAnnotation => {
-        if (s.requiredMode() == RequiredMode.AUTO) {
-          if (s.required()) {
-            RequiredMode.REQUIRED
-          } else if (SwaggerScalaModelConverter.isRequiredBasedOnAnnotation) {
-            RequiredMode.NOT_REQUIRED
-          } else {
-            RequiredMode.AUTO
-          }
-        } else {
-          s.requiredMode()
-        }
-      }
-      case a: ArraySchema => {
-        if (a.arraySchema().requiredMode() == RequiredMode.AUTO) {
-          if (a.arraySchema().required()) {
-            RequiredMode.REQUIRED
-          } else if (SwaggerScalaModelConverter.isRequiredBasedOnAnnotation) {
-            RequiredMode.NOT_REQUIRED
-          } else {
-            RequiredMode.AUTO
-          }
-        } else {
-          a.arraySchema().requiredMode()
-        }
-      }
-    }
-    flags.flatMap {
-      case RequiredMode.REQUIRED => Some(true)
-      case RequiredMode.NOT_REQUIRED => Some(false)
-      case _ => None
     }
   }
 
