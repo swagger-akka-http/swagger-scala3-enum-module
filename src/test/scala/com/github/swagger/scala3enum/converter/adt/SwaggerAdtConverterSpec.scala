@@ -11,6 +11,18 @@ import scala.reflect.Enum
 
 class SwaggerAdtConverterSpec extends AnyWordSpec with Matchers with OptionValues {
   "SwaggerScala3EnumModelConverter" should {
+    "get model for Car" in {
+      val converter = ModelConverters.getInstance()
+      val schemas = converter.readAll(classOf[Car]).asScala.toMap
+      val model = findModel(schemas, "Car")
+      model should be(defined)
+      model.get.getProperties should not be (null)
+      val field = model.value.getProperties.get("color")
+      field shouldBe a[StringSchema]
+      nullSafeList(field.asInstanceOf[StringSchema].getEnum) shouldEqual Seq("Red", "Green", "Blue")
+      nullSafeList(field.getRequired) shouldBe empty
+      nullSafeList(model.value.getRequired) shouldEqual Seq("color", "make")
+    }
     "get model for ColorSet" in {
       val converter = ModelConverters.getInstance()
       val schemas = converter.readAll(classOf[ColorSet]).asScala.toMap
@@ -20,8 +32,6 @@ class SwaggerAdtConverterSpec extends AnyWordSpec with Matchers with OptionValue
       val field = model.value.getProperties.get("set")
       field shouldBe an [ArraySchema]
       nullSafeList(field.asInstanceOf[ArraySchema].getEnum) shouldEqual Seq("Red", "Green", "Blue")
-      nullSafeList(field.getRequired) shouldBe empty
-      nullSafeList(model.value.getRequired) shouldEqual Seq("color", "make")
     }
   }
 

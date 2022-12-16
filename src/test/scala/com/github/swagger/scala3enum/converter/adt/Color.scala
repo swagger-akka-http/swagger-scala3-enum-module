@@ -6,4 +6,6 @@ enum Color(val rgb: Int):
   case Blue  extends Color(0x0000FF)
   case Mix(mix: Int) extends Color(mix)
 
-case class ColorSet(set: Set[Color])  
+case class ColorSet(set: Set[Color])
+
+case class Car(make: String, color: Color)  
