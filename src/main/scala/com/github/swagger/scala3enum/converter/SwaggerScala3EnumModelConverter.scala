@@ -10,11 +10,14 @@ import io.swagger.v3.oas.annotations.media.{ArraySchema, Schema as SchemaAnnotat
 import io.swagger.v3.oas.models.media.Schema
 
 import java.lang.annotation.Annotation
+import java.lang.reflect.InvocationTargetException
 import java.util.Iterator
 import scala.reflect.Enum
+import scala.util.Try
 
 class SwaggerScala3EnumModelConverter extends ModelResolver(Json.mapper()) {
   private val enumEntryClass = classOf[Enum]
+  private val IntClass = classOf[Int]
 
   override def resolve(annotatedType: AnnotatedType, context: ModelConverterContext, chain: Iterator[ModelConverter]): Schema[_] = {
     val javaType = _mapper.constructType(annotatedType.getType)
@@ -22,8 +25,10 @@ class SwaggerScala3EnumModelConverter extends ModelResolver(Json.mapper()) {
     if (isEnum(cls)) {
       val sp: Schema[String] = PrimitiveType.STRING.createProperty().asInstanceOf[Schema[String]]
       setRequired(annotatedType)
-      getValues(cls).foreach { v =>
-        sp.addEnumItemObject(v)
+      tryValues(cls).toOption.orElse(matchBasedOnOrdinals(cls)).map { values =>
+        values.foreach { v =>
+          sp.addEnumItemObject(v)
+        }
       }
       nullSafeList(annotatedType.getCtxAnnotations).foreach {
         case p: Parameter => {
@@ -63,10 +68,46 @@ class SwaggerScala3EnumModelConverter extends ModelResolver(Json.mapper()) {
 
   private def isEnum(cls: Class[_]): Boolean = enumEntryClass.isAssignableFrom(cls)
 
-  private def getValues(cls: Class[_]): Seq[String] = {
+  private def tryValues(cls: Class[_]): Try[Seq[String]] = Try {
     val enumCompanion = Class.forName(cls.getName + "$").getField("MODULE$").get(null)
     val enumArray = enumCompanion.getClass.getDeclaredMethod("values").invoke(enumCompanion).asInstanceOf[Array[Enum]]
     enumArray.sortBy(_.ordinal).map(_.toString).toSeq
+  }
+
+  private def matchBasedOnOrdinals(clz: Class[_]): Option[Seq[String]] = {
+    val className = clz.getName
+    val companionObjectClassOption = if (className.endsWith("$")) {
+      Some(clz)
+    } else {
+      Try(Class.forName(className + "$")).toOption
+    }
+    companionObjectClassOption.flatMap { companionObjectClass =>
+      Try(companionObjectClass.getField("MODULE$")).toOption.flatMap { moduleField =>
+        val instance = moduleField.get(None.orNull)
+        Try(clz.getMethod("fromOrdinal", IntClass)).toOption.map { method =>
+          var i = 0
+          var matched: Seq[String] = Seq.empty[String]
+          var complete = false
+          while (!complete) {
+            try {
+              val enumValue = method.invoke(instance, i)
+              matched = matched :+ enumValue.toString
+            } catch {
+              case _: NoSuchElementException => complete = true
+              case itex: InvocationTargetException => {
+                Option(itex.getCause) match {
+                  case Some(e) if e.isInstanceOf[NoSuchElementException] => complete = true
+                  case Some(e) => throw e
+                  case _ => throw itex
+                }
+              }
+            }
+            i += 1
+          }
+          matched
+        }
+      }
+    }
   }
 
   private def setRequired(annotatedType: AnnotatedType): Unit = annotatedType match {
