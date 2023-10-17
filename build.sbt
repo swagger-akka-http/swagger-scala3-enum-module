@@ -17,11 +17,11 @@ Test / publishArtifact := false
 pomIncludeRepository := { x => false }
 
 libraryDependencies ++= Seq(
-  "io.swagger.core.v3" % "swagger-core-jakarta" % "2.2.15",
+  "io.swagger.core.v3" % "swagger-core-jakarta" % "2.2.17",
   "com.github.swagger-akka-http" %% "swagger-scala-module" % "2.11.0",
-  "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.15.2",
-  "org.scalatest" %% "scalatest" % "3.2.16" % Test,
-  "org.slf4j" % "slf4j-simple" % "2.0.7" % Test
+  "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.15.3",
+  "org.scalatest" %% "scalatest" % "3.2.17" % Test,
+  "org.slf4j" % "slf4j-simple" % "2.0.9" % Test
 )
 
 homepage := Some(new URL("https://github.com/swagger-akka-http/swagger-scala3-enum-module"))
