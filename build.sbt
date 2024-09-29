@@ -6,7 +6,7 @@ import sbtghactions.JavaSpec.Distribution.Zulu
 
 organization := "com.github.swagger-akka-http"
 
-ThisBuild / scalaVersion := "3.3.3"
+ThisBuild / scalaVersion := "3.3.4"
 
 ThisBuild / organizationHomepage := Some(url("https://github.com/swagger-akka-http/swagger-scala3-enum-module"))
 
@@ -17,9 +17,9 @@ Test / publishArtifact := false
 pomIncludeRepository := { x => false }
 
 libraryDependencies ++= Seq(
-  "io.swagger.core.v3" % "swagger-core-jakarta" % "2.2.23",
-  "com.github.swagger-akka-http" %% "swagger-scala-module" % "2.12.3",
-  "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.17.2",
+  "io.swagger.core.v3" % "swagger-core-jakarta" % "2.2.24",
+  "com.github.swagger-akka-http" %% "swagger-scala-module" % "2.13.0",
+  "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.18.0",
   "org.scalatest" %% "scalatest" % "3.2.19" % Test,
   "org.slf4j" % "slf4j-simple" % "2.0.16" % Test
 )
