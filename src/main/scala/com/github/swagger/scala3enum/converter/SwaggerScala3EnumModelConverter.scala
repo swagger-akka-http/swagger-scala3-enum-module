@@ -3,7 +3,7 @@ package com.github.swagger.scala3enum.converter
 import com.github.swagger.scala.converter.{AnnotatedTypeForOption, SwaggerScalaModelConverter}
 import io.swagger.v3.core.converter.{AnnotatedType, ModelConverter, ModelConverterContext}
 import io.swagger.v3.core.jackson.ModelResolver
-import io.swagger.v3.core.util.{Json, PrimitiveType}
+import io.swagger.v3.core.util.PrimitiveType
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.media.Schema.AccessMode
 import io.swagger.v3.oas.annotations.media.{Schema as SchemaAnnotation}
@@ -14,7 +14,7 @@ import java.util.Iterator
 import scala.reflect.Enum
 import scala.util.Try
 
-class SwaggerScala3EnumModelConverter extends ModelResolver(Json.mapper()) {
+class SwaggerScala3EnumModelConverter extends ModelResolver(SwaggerScalaModelConverter.createObjectMapper()) {
   private val enumEntryClass = classOf[Enum]
   private val IntClass = classOf[Int]
 
